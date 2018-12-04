@@ -1,6 +1,3 @@
-# TODO: what minute was he asleep for the most?
-# TODO: answer
-
 import datetime
 from operator import itemgetter
 
