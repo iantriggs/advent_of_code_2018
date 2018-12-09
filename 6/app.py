@@ -43,18 +43,23 @@ for y, row in enumerate(grid):
         else:
             grid[y][x] = find_closest_point(actual_x, actual_y)
 
-# We only care about the areas that aren't on boundaries
-possible_areas = set()
-for row in grid:
-    for column in row:
-        if column is not None:
-            if (minx != column[0]) and (miny != column[1]) and (maxx != column[0]) and (maxy != column[1]):
-                possible_areas.add(column)
 
-
+# Find the infinite areas
+infinite_areas = set()
+for index, row in enumerate(grid):
+    for index2, column in enumerate(row):
+        if ((index == 0) or (index == (len(grid) - 1))) and (column is not None):
+            infinite_areas.add(column)
+        elif ((index2 == 0) or (index2 == len(row) - 1)) and (column is not None):
+            infinite_areas.add(column)
+# Find the finite areas
+finite_areas = set()
+for co_ord in co_ords:
+    if co_ord not in infinite_areas:
+        finite_areas.add(co_ord)
 # Count up everything on the grid
 results = defaultdict(int)
-for possibility in possible_areas:
+for possibility in finite_areas:
     for row in grid:
         for column in row:
             if possibility == column:
@@ -62,3 +67,14 @@ for possibility in possible_areas:
 
 result = sorted(results.items(), key=lambda x: x[1], reverse=True)[0]
 print(result[1])
+
+
+# Part 2
+under_10000 = []
+for x in range(minx, maxx + 1):
+    for y in range(miny, maxy + 1):
+        total = sum([manhattan_distance((x, y), co_ord) for co_ord in co_ords])
+        if total < 10000:
+            under_10000.append((x,y))
+
+print(len(under_10000))
